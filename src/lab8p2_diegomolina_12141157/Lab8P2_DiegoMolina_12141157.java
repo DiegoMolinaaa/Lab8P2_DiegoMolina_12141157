@@ -15,7 +15,7 @@ public class Lab8P2_DiegoMolina_12141157 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // TODO code application logic 
         main m = new main();
         m.setVisible(true);
     }
