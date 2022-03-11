@@ -11,12 +11,11 @@ import java.awt.Color;
  *
  * @author diego
  */
-public abstract class Carro {
+public abstract class Carro{
     private int numID;
     private int distanciaR;
     private String nomC;
     private Color c;
-
     public Carro() {
     }
 

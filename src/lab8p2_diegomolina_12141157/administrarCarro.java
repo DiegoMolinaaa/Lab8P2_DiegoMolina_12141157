@@ -47,7 +47,7 @@ public class administrarCarro {
     }
 
     //extra mutador
-    public void setPersona(Carro c) {
+    public void setCarro(Carro c) {
         this.listaCarros.add(c);
     }
 
@@ -91,6 +91,7 @@ public class administrarCarro {
                 bw.close();
                 fw.close();
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }

@@ -13,7 +13,6 @@ import java.util.Random;
  * @author diego
  */
 public class Nascar extends Carro {
-
     public Nascar() {
         super();
     }

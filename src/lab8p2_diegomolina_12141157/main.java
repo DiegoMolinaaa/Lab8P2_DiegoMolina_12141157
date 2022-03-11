@@ -5,6 +5,11 @@
  */
 package lab8p2_diegomolina_12141157;
 
+import java.awt.Color;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author diego
@@ -16,6 +21,14 @@ public class main extends javax.swing.JFrame {
      */
     public main() {
         initComponents();
+        DefaultComboBoxModel dc = (DefaultComboBoxModel) cb_carros.getModel();
+        dc.removeAllElements();
+        administrarCarro aC = new administrarCarro("./Carros.cbm");
+        for (Carro c : aC.getListaCarros()) {
+            dc.addElement(c);
+        }
+        cb_carros.setModel(dc);
+        
     }
 
     /**
@@ -32,7 +45,7 @@ public class main extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jl_nomPista = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        bt_largoP = new javax.swing.JLabel();
+        jl_largoP = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jt_posiciones = new javax.swing.JTable();
@@ -64,7 +77,7 @@ public class main extends javax.swing.JFrame {
 
         jLabel3.setText("Largo");
 
-        bt_largoP.setText("____");
+        jl_largoP.setText("____");
 
         jt_posiciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -85,8 +98,18 @@ public class main extends javax.swing.JFrame {
         ftf_largoP.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         bt_setPista.setText("Usar Pista");
+        bt_setPista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_setPistaActionPerformed(evt);
+            }
+        });
 
         bt_restart.setText("Reiniciar");
+        bt_restart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_restartActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Numero Identificador");
 
@@ -94,9 +117,21 @@ public class main extends javax.swing.JFrame {
 
         jLabel6.setText("Nombre Corredor");
 
+        cb_tiposC.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "McQueen", "Convertible", "Nascar" }));
+
         bt_color.setText("Color");
+        bt_color.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_colorActionPerformed(evt);
+            }
+        });
 
         bt_guardarCarro.setText("Guardar");
+        bt_guardarCarro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_guardarCarroActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,7 +149,7 @@ public class main extends javax.swing.JFrame {
                 .addGap(126, 126, 126)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(bt_largoP)
+                .addComponent(jl_largoP)
                 .addGap(133, 133, 133))
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
@@ -173,7 +208,7 @@ public class main extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jl_nomPista)
                     .addComponent(jLabel3)
-                    .addComponent(bt_largoP))
+                    .addComponent(jl_largoP))
                 .addGap(18, 18, 18)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -207,6 +242,86 @@ public class main extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bt_colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_colorActionPerformed
+        // TODO add your handling code here:
+        bt_color.setBackground(
+                JColorChooser.showDialog(
+                        this, "Seleccione un color", 
+                        Color.yellow)
+        );
+    }//GEN-LAST:event_bt_colorActionPerformed
+
+    private void bt_guardarCarroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_guardarCarroActionPerformed
+        // TODO add your handling code here:
+        int numID;
+        String nomC;
+        Color color;
+        String tipo = (String)cb_tiposC.getSelectedItem();
+        Carro c;
+        boolean repetido=false;
+        numID = Integer.parseInt(ftf_numID.getText());
+        administrarCarro aC = new administrarCarro("./Carros.cbm");
+        if(!(aC.getListaCarros().isEmpty())){
+            for (Carro car : aC.getListaCarros()) {
+                if(numID==car.getNumID()){
+                    System.out.println(numID);
+                    System.out.println(car.getNumID());
+                    repetido=true;
+                }
+            }
+        }
+        if(repetido==false){
+            nomC = tf_nomC.getText();
+            color = bt_color.getBackground();
+            if(tipo=="McQueen"){
+                c = new McQueen(numID, 0, nomC, color);
+            }
+            else if(tipo=="Convertible"){
+                c = new Convertible(numID, 0, nomC, color);
+            }
+            else{
+                c = new Nascar(numID, 0, nomC, color);
+            }
+            aC.cargarArchivo();
+            aC.setCarro(c);
+            aC.escribirArchivo();
+            JOptionPane.showMessageDialog(this,
+                    "Carro guardado exitosamente");
+            ftf_numID.setText("");
+            tf_nomC.setText("");
+            DefaultComboBoxModel dc = (DefaultComboBoxModel) cb_carros.getModel();
+            dc.removeAllElements();
+            for (Carro carro : aC.getListaCarros()) {
+                dc.addElement(carro);
+            }
+            cb_carros.setModel(dc);
+        }
+        else if(repetido == true){
+            JOptionPane.showMessageDialog(null, "Debe de Ingresar un numero identificador diferente");
+        }
+        
+    }//GEN-LAST:event_bt_guardarCarroActionPerformed
+
+    private void bt_setPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_setPistaActionPerformed
+        // TODO add your handling code here:
+        nombreP = tf_nomPista.getText();
+        largoP = Integer.parseInt(ftf_largoP.getText());
+        JOptionPane.showMessageDialog(null, "Pista creada con exito");
+        tf_nomPista.setText("");
+        ftf_largoP.setText("");
+        jl_nomPista.setText(nombreP);
+        jl_largoP.setText(largoP+"");
+    }//GEN-LAST:event_bt_setPistaActionPerformed
+
+    private void bt_restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_restartActionPerformed
+        // TODO add your handling code here:
+        nombreP = "";
+        largoP = 0;
+        jl_nomPista.setText("____");
+        jl_largoP.setText("_____");
+        JOptionPane.showMessageDialog(null, "Favor Crear otra pista");
+    }//GEN-LAST:event_bt_restartActionPerformed
 
     /**
      * @param args the command line arguments
@@ -248,7 +363,6 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton bt_color;
     private javax.swing.JButton bt_comenzar;
     private javax.swing.JButton bt_guardarCarro;
-    private javax.swing.JLabel bt_largoP;
     private javax.swing.JButton bt_pausar;
     private javax.swing.JButton bt_restart;
     private javax.swing.JButton bt_setPista;
@@ -264,9 +378,12 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jl_largoP;
     private javax.swing.JLabel jl_nomPista;
     private javax.swing.JTable jt_posiciones;
     private javax.swing.JTextField tf_nomC;
     private javax.swing.JTextField tf_nomPista;
     // End of variables declaration//GEN-END:variables
+String nombreP;
+int largoP;
 }

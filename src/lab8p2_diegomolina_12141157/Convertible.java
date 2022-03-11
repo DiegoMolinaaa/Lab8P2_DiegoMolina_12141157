@@ -13,7 +13,6 @@ import java.util.Random;
  * @author diego
  */
 public class Convertible extends Carro {
-
     public Convertible() {
         super();
     }
