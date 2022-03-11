@@ -11,20 +11,18 @@ import java.awt.Color;
  *
  * @author diego
  */
-public class Carro {
+public abstract class Carro {
     private int numID;
     private int distanciaR;
-    private int distXseg;
     private String nomC;
     private Color c;
 
     public Carro() {
     }
 
-    public Carro(int numID, int distanciaR, int distXseg, String nomC, Color c) {
+    public Carro(int numID, int distanciaR, String nomC, Color c) {
         this.numID = numID;
         this.distanciaR = distanciaR;
-        this.distXseg = distXseg;
         this.nomC = nomC;
         this.c = c;
     }
@@ -43,14 +41,6 @@ public class Carro {
 
     public void setDistanciaR(int distanciaR) {
         this.distanciaR = distanciaR;
-    }
-
-    public int getDistXseg() {
-        return distXseg;
-    }
-
-    public void setDistXseg(int distXseg) {
-        this.distXseg = distXseg;
     }
 
     public String getNomC() {
@@ -73,5 +63,5 @@ public class Carro {
     public String toString() {
         return  numID+"";
     }
-    
+    public abstract int distXseg(Carro c);
 }
