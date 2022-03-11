@@ -9,6 +9,7 @@ import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,13 +22,15 @@ public class main extends javax.swing.JFrame {
      */
     public main() {
         initComponents();
+        administrarCarro aC = new administrarCarro("./Carros.cbm");
+        aC.cargarArchivo();
         DefaultComboBoxModel dc = (DefaultComboBoxModel) cb_carros.getModel();
         dc.removeAllElements();
-        administrarCarro aC = new administrarCarro("./Carros.cbm");
-        for (Carro c : aC.getListaCarros()) {
-            dc.addElement(c);
+        for (Carro listaCarro : aC.getListaCarros()) {
+            dc.addElement(listaCarro);
         }
         cb_carros.setModel(dc);
+        
         
     }
 
@@ -90,6 +93,11 @@ public class main extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jt_posiciones);
 
         bt_add.setText("Agregar");
+        bt_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_addActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Nombre Pista");
 
@@ -259,16 +267,13 @@ public class main extends javax.swing.JFrame {
         Color color;
         String tipo = (String)cb_tiposC.getSelectedItem();
         Carro c;
+        administrarCarro aC = new administrarCarro("./Carros.cbm");
+        aC.cargarArchivo();
         boolean repetido=false;
         numID = Integer.parseInt(ftf_numID.getText());
-        administrarCarro aC = new administrarCarro("./Carros.cbm");
-        if(!(aC.getListaCarros().isEmpty())){
-            for (Carro car : aC.getListaCarros()) {
-                if(numID==car.getNumID()){
-                    System.out.println(numID);
-                    System.out.println(car.getNumID());
-                    repetido=true;
-                }
+        for (Carro listaCarro : aC.getListaCarros()) {
+            if(numID==listaCarro.getNumID()){
+                repetido=true;
             }
         }
         if(repetido==false){
@@ -283,7 +288,6 @@ public class main extends javax.swing.JFrame {
             else{
                 c = new Nascar(numID, 0, nomC, color);
             }
-            aC.cargarArchivo();
             aC.setCarro(c);
             aC.escribirArchivo();
             JOptionPane.showMessageDialog(this,
@@ -297,8 +301,9 @@ public class main extends javax.swing.JFrame {
             }
             cb_carros.setModel(dc);
         }
-        else if(repetido == true){
-            JOptionPane.showMessageDialog(null, "Debe de Ingresar un numero identificador diferente");
+        else{
+            JOptionPane.showMessageDialog(null, "Debe de agregar un numero identificador diferente");
+            ftf_numID.setText("");
         }
         
     }//GEN-LAST:event_bt_guardarCarroActionPerformed
@@ -316,12 +321,19 @@ public class main extends javax.swing.JFrame {
 
     private void bt_restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_restartActionPerformed
         // TODO add your handling code here:
-        nombreP = "";
-        largoP = 0;
-        jl_nomPista.setText("____");
-        jl_largoP.setText("_____");
-        JOptionPane.showMessageDialog(null, "Favor Crear otra pista");
+        DefaultTableModel modelo = (DefaultTableModel) jt_posiciones.getModel();
+        modelo.setRowCount(0);
+        jt_posiciones.setModel(modelo);
     }//GEN-LAST:event_bt_restartActionPerformed
+
+    private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
+        // TODO add your handling code here:
+        Carro c = (Carro)cb_carros.getSelectedItem();
+        DefaultTableModel modelo = (DefaultTableModel) jt_posiciones.getModel();
+        Object row[] = {c.getNumID(), c.getNomC(), c.getDistanciaR()};
+        modelo.addRow(row);
+        jt_posiciones.setModel(modelo);
+    }//GEN-LAST:event_bt_addActionPerformed
 
     /**
      * @param args the command line arguments

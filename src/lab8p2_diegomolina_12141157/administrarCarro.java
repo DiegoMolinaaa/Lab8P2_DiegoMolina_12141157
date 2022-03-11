@@ -65,7 +65,6 @@ public class administrarCarro {
                         listaCarros.add(temp);
                     }
                 } catch (EOFException e) {
-                    //encontro el final del archivo
                 }
                 objeto.close();
                 entrada.close();

@@ -6,19 +6,21 @@
 package lab8p2_diegomolina_12141157;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  *
  * @author diego
  */
-public abstract class Carro{
+public abstract class Carro implements Serializable{
     private int numID;
     private int distanciaR;
     private String nomC;
     private Color c;
+    private static final long SerialVersionUID=777L;
     public Carro() {
     }
-
+    
     public Carro(int numID, int distanciaR, String nomC, Color c) {
         this.numID = numID;
         this.distanciaR = distanciaR;
