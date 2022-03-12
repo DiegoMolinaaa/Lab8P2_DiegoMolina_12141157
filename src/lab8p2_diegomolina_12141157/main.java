@@ -103,6 +103,11 @@ public class main extends javax.swing.JFrame {
                 "Identificador", "Corredor", "Distancia"
             }
         ));
+        jt_posiciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_posicionesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jt_posiciones);
 
         bt_add.setText("Agregar");
@@ -339,6 +344,8 @@ public class main extends javax.swing.JFrame {
         for (Carro carro : carrosCarrera) {
             carro.setDistanciaR(0);
         }
+        pg_distancia.setValue(0);
+        pg_distancia.setForeground(null);
         carrosCarrera = new ArrayList();
     }//GEN-LAST:event_bt_restartActionPerformed
 
@@ -388,6 +395,19 @@ public class main extends javax.swing.JFrame {
         // TODO add your handling code here:
         aD.setAvanzar(false);
     }//GEN-LAST:event_bt_pausarActionPerformed
+
+    private void jt_posicionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_posicionesMouseClicked
+        // TODO add your handling code here:
+        try{
+            int pos = jt_posiciones.getSelectedRow();
+            if(pos!=-1){
+                pg_distancia.setValue(carrosCarrera.get(pos).getDistanciaR());
+                pg_distancia.setForeground(carrosCarrera.get(pos).getC());
+            }
+        } catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_jt_posicionesMouseClicked
     
     /**
      * @param args the command line arguments

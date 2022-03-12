@@ -50,6 +50,8 @@ public class administradorDistancia extends Thread {
                 if(gano==false){
                     for (Carro c : carros) {
                         c.setDistanciaR(c.getDistanciaR()+c.distXseg(c));
+                        //progBar_d.setValue(c.getDistanciaR());
+                        //progBar_d.setForeground(c.getC());
                     }
                     sort(carros);
                     DefaultTableModel modelo = (DefaultTableModel) t.getModel();
@@ -60,8 +62,7 @@ public class administradorDistancia extends Thread {
                         t.setModel(modelo);
                     }
                     try{
-                       progBar_d.setValue(carros.get(t.getSelectedRow()).getDistanciaR());
-                       progBar_d.setForeground(carros.get(t.getSelectedRow()).getC()); 
+                        
                     }catch(Exception e){
                         
                     }
