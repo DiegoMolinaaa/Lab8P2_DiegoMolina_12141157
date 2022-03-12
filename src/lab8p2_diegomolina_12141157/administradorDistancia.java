@@ -47,13 +47,10 @@ public class administradorDistancia extends Thread {
         boolean gano = false;
         while (vive) {
             if (avanzar) {
-                for (Carro c : carros) {
-                    c.setDistanciaR(c.getDistanciaR()+c.distXseg(c));
-                    if(c.getDistanciaR()>=progBar_d.getMaximum()){
-                        gano=true;
+                if(gano==false){
+                    for (Carro c : carros) {
+                        c.setDistanciaR(c.getDistanciaR()+c.distXseg(c));
                     }
-                }
-                if(gano=false){
                     sort(carros);
                     DefaultTableModel modelo = (DefaultTableModel) t.getModel();
                     modelo.setRowCount(0);
@@ -62,9 +59,23 @@ public class administradorDistancia extends Thread {
                         modelo.addRow(row);
                         t.setModel(modelo);
                     }
+                    try{
+                       progBar_d.setValue(carros.get(t.getSelectedRow()).getDistanciaR());
+                       progBar_d.setForeground(carros.get(t.getSelectedRow()).getC()); 
+                    }catch(Exception e){
+                        
+                    }
+                    
+                    for (int i = 0; i < carros.size()-1; i++) {
+                        if((int)t.getValueAt(i, 2)>=progBar_d.getMaximum()){
+                            gano=true;
+                        }
+                    }
+                    
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "TERMINOOOO!!!");
+                    break;
                 }
             }
             try {

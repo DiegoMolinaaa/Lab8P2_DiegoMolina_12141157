@@ -103,11 +103,6 @@ public class main extends javax.swing.JFrame {
                 "Identificador", "Corredor", "Distancia"
             }
         ));
-        jt_posiciones.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jt_posicionesMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(jt_posiciones);
 
         bt_add.setText("Agregar");
@@ -341,6 +336,10 @@ public class main extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) jt_posiciones.getModel();
         modelo.setRowCount(0);
         jt_posiciones.setModel(modelo);
+        for (Carro carro : carrosCarrera) {
+            carro.setDistanciaR(0);
+        }
+        carrosCarrera = new ArrayList();
     }//GEN-LAST:event_bt_restartActionPerformed
 
     private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
@@ -389,25 +388,6 @@ public class main extends javax.swing.JFrame {
         // TODO add your handling code here:
         aD.setAvanzar(false);
     }//GEN-LAST:event_bt_pausarActionPerformed
-
-    private void jt_posicionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_posicionesMouseClicked
-        // TODO add your handling code here:
-//        DefaultTableModel m = (DefaultTableModel) jt_posiciones.getModel();
-//        //int posx = .get
-//        //m.getValueAt(ERROR, NORMAL)
-//        int posx = jt_posiciones.getSelectedRow();
-//        int posy = jt_posiciones.getSelectedColumn();
-//        Carro c = (Carro)m.getValueAt(posx, posy);
-//        System.out.println(c);
-//        aD = new administradorDistancia(pg_distancia,c);
-//        try { //por si ya esta iniciado
-//            aD.start();
-//            } catch (Exception e) {
-//
-//            }        
-//            aD.setAvanzar(true);
-        
-    }//GEN-LAST:event_jt_posicionesMouseClicked
     
     /**
      * @param args the command line arguments
