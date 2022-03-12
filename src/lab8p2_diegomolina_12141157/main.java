@@ -6,9 +6,11 @@
 package lab8p2_diegomolina_12141157;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,6 +32,7 @@ public class main extends javax.swing.JFrame {
             dc.addElement(listaCarro);
         }
         cb_carros.setModel(dc);
+        jt_posiciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         
     }
@@ -49,7 +52,7 @@ public class main extends javax.swing.JFrame {
         jl_nomPista = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jl_largoP = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        pg_distancia = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jt_posiciones = new javax.swing.JTable();
         cb_carros = new javax.swing.JComboBox<>();
@@ -71,8 +74,18 @@ public class main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         bt_comenzar.setText("Comenzar");
+        bt_comenzar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_comenzarActionPerformed(evt);
+            }
+        });
 
         bt_pausar.setText("Pausar");
+        bt_pausar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_pausarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Pista");
 
@@ -90,6 +103,11 @@ public class main extends javax.swing.JFrame {
                 "Identificador", "Corredor", "Distancia"
             }
         ));
+        jt_posiciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_posicionesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jt_posiciones);
 
         bt_add.setText("Agregar");
@@ -173,7 +191,7 @@ public class main extends javax.swing.JFrame {
                         .addGap(240, 240, 240))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pg_distancia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -218,7 +236,7 @@ public class main extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jl_largoP))
                 .addGap(18, 18, 18)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pg_distancia, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -290,8 +308,7 @@ public class main extends javax.swing.JFrame {
             }
             aC.setCarro(c);
             aC.escribirArchivo();
-            JOptionPane.showMessageDialog(this,
-                    "Carro guardado exitosamente");
+            JOptionPane.showMessageDialog(this, "Carro guardado exitosamente");
             ftf_numID.setText("");
             tf_nomC.setText("");
             DefaultComboBoxModel dc = (DefaultComboBoxModel) cb_carros.getModel();
@@ -328,13 +345,70 @@ public class main extends javax.swing.JFrame {
 
     private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
         // TODO add your handling code here:
+        boolean existe=false;
         Carro c = (Carro)cb_carros.getSelectedItem();
         DefaultTableModel modelo = (DefaultTableModel) jt_posiciones.getModel();
-        Object row[] = {c.getNumID(), c.getNomC(), c.getDistanciaR()};
-        modelo.addRow(row);
-        jt_posiciones.setModel(modelo);
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            if((Object)c.getNumID()==modelo.getValueAt(i, 0) && (Object)c.getNomC()==modelo.getValueAt(i, 1)){
+                existe=true;
+            }
+        }
+        if(existe==false){
+            carrosCarrera.add(c);
+            Object row[] = {c.getNumID(), c.getNomC(), c.getDistanciaR()};
+            modelo.addRow(row);
+            jt_posiciones.setModel(modelo);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Este elemento ya ha sido agregado");
+        }
+        
     }//GEN-LAST:event_bt_addActionPerformed
 
+    private void bt_comenzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_comenzarActionPerformed
+        // TODO add your handling code here:
+        if(nombreP=="" && largoP==0 ){
+            JOptionPane.showMessageDialog(null, "Debe de crear una pista antes de correr");
+        }
+        else if(jt_posiciones.getRowCount()==0){
+            JOptionPane.showMessageDialog(null, "Debe de asignar corredores antes de correr");
+        }
+        else{
+            pg_distancia.setMaximum(largoP);
+            aD = new administradorDistancia(pg_distancia,carrosCarrera, jt_posiciones);
+        try { //por si ya esta iniciado
+            aD.start();
+            } catch (Exception e) {
+
+            }        
+            aD.setAvanzar(true);
+        }    
+    }//GEN-LAST:event_bt_comenzarActionPerformed
+
+    private void bt_pausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_pausarActionPerformed
+        // TODO add your handling code here:
+        aD.setAvanzar(false);
+    }//GEN-LAST:event_bt_pausarActionPerformed
+
+    private void jt_posicionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_posicionesMouseClicked
+        // TODO add your handling code here:
+//        DefaultTableModel m = (DefaultTableModel) jt_posiciones.getModel();
+//        //int posx = .get
+//        //m.getValueAt(ERROR, NORMAL)
+//        int posx = jt_posiciones.getSelectedRow();
+//        int posy = jt_posiciones.getSelectedColumn();
+//        Carro c = (Carro)m.getValueAt(posx, posy);
+//        System.out.println(c);
+//        aD = new administradorDistancia(pg_distancia,c);
+//        try { //por si ya esta iniciado
+//            aD.start();
+//            } catch (Exception e) {
+//
+//            }        
+//            aD.setAvanzar(true);
+        
+    }//GEN-LAST:event_jt_posicionesMouseClicked
+    
     /**
      * @param args the command line arguments
      */
@@ -388,14 +462,16 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jl_largoP;
     private javax.swing.JLabel jl_nomPista;
     private javax.swing.JTable jt_posiciones;
+    private javax.swing.JProgressBar pg_distancia;
     private javax.swing.JTextField tf_nomC;
     private javax.swing.JTextField tf_nomPista;
     // End of variables declaration//GEN-END:variables
-String nombreP;
-int largoP;
+    String nombreP = "";
+    int largoP = 0;
+    administradorDistancia aD;
+    ArrayList<Carro> carrosCarrera = new ArrayList();
 }
